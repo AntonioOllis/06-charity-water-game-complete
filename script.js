@@ -25,26 +25,25 @@ function playSound(sound){
 }
 
 const timer = document.getElementById('timer');
+const timerAlert = document.getElementById('timerAlert');
 let timeLeft = 30;
 let timerInterval;
 
-function resetTimer(){
+function resetTimer(time){
   clearInterval(timerInterval);
-  timeLeft = 30;
+  timeLeft = time;
   timer.textContent = timeLeft;
   startTimer();
 }
 
 function startTimer(){
   timerInterval = setInterval(function(){
-    // TODO: Subtract one from timeLeft.
     timeLeft--;
-    // TODO: Show the updated time in the timer element.
     timer.textContent = timeLeft;
-    // TODO: When timeLeft reaches 0, stop timerInterval.
-    if(timeLeft == 0 && won == true){
+    threeLeft();
+    if(timeLeft <= 0 && won == true){
       clearInterval(timerInterval);
-    } else if (timeLeft == 0) {
+    } else if (timeLeft <= 0) {
       lose();
       clearInterval(timerInterval);
     }
@@ -68,35 +67,46 @@ jerryImage.alt = 'jerry';
 // Find the game board so we can add a cell to it.
 const gameBoard = document.getElementById('game-board');
 
-const switchButton = document.getElementById('switchButton');
+const difficultySelect = document.getElementById('switchLevel');
 const mobileControls = document.getElementById('mobile-controls');
 
-switchButton.addEventListener('click', function() {
-  if(board === 1){
-    board = 2;
-    setBoard2();
-  }else{
-    board = 1;
-    setBoard1();
-  }
-  resetTimer();
+difficultySelect.addEventListener('change', function() {
+  loadSelectedBoard();
 })
 
 const resetButton = document.getElementById('resetButton');
 
 resetButton.addEventListener('click', function() {
+  loadSelectedBoard();
+})
+
+function loadSelectedBoard(){
   won = false;
-  board = 1;
+  timerAlert.hidden = true;
   score.textContent = 0;
   winMessage.hidden = true;
   winMessage.classList.remove('win-message--loss');
   confetti.replaceChildren();
-  setBoard1();
-  resetTimer();
-})
+
+  if(difficultySelect.value === 'medium'){
+    board = 1;
+    setBoard1();
+    resetTimer(10);
+  }else if(difficultySelect.value === 'easy'){
+    board = 2;
+    setBoard2();
+    resetTimer(15);
+  }else{
+    board = 3;
+    setBoard3();
+    resetTimer(7);
+  }
+}
 
 function win(){
   playSound(winSound);
+  clearInterval(timerInterval);
+  timerAlert.hidden = true;
   winMessage.hidden = false;
   winMessage.classList.remove('win-message--loss');
   winMessageHeading.textContent = 'You win!';
@@ -116,12 +126,20 @@ function win(){
 }
 
 function lose(){
+  won = true;
   playSound(loseSound);
+  timerAlert.hidden = true;
   winMessage.hidden = false;
   winMessage.classList.add('win-message--loss');
   winMessageHeading.textContent = 'You lost!';
   winMessageText.textContent = "You didn't reach the goal in time!";
   confetti.replaceChildren();
+}
+
+function threeLeft(){
+  if(timeLeft === 3){
+    timerAlert.hidden = false;
+}
 }
 
 // Create one cell and give it the styles for a filled box.
@@ -166,17 +184,26 @@ gameBoard.appendChild(cell);
       return;
     }else if(nextCell.classList.contains('cell-obstacle')){
        playSound(obstacleSound);
-       timeLeft -= 10;
-      nextCell.removeChild(spikeImage);
+       timeLeft -= 6;
+      nextCell.querySelector('img').remove();
       nextCell.classList.remove('cell-obstacle');
     }else if(nextCell.classList.contains('cell-powered')){
       playSound(powerUpSound);
-      timeLeft += 10;
+      timeLeft += 3;
       nextCell.removeChild(jerryImage);
       nextCell.classList.remove('cell-powered');
     }else if(nextCell.classList.contains('cell-goal')){
       won = true;
-      score.textContent = Number(score.textContent) + timeLeft * 100;
+      let scoreMultiplier = 1;
+
+      if(difficultySelect.value === 'medium'){
+        scoreMultiplier = 2;
+      }else if(difficultySelect.value === 'hard'){
+        scoreMultiplier = 3;
+      }
+
+      const pointsEarned = timeLeft * 100 * scoreMultiplier;
+      score.textContent = Number(score.textContent) + pointsEarned;
       win();
     }
 
@@ -235,7 +262,7 @@ gameBoard.appendChild(cell);
       clearBoard();
       wormPosition = 39;
 
-      const barriers = [6, 7, 8, 9, 11, 12, 13, 14, 18, 19, 20, 21, 23, 24, 25, 26, 29, 30, 31, 32, 34, 35, 36, 37];
+      const barriers = [5, 7, 15, 19, 20, 24, 25, 30, 31, 35, 36];
 
       for(let j = 0; j < barriers.length; j++){
         cells[barriers[j]].classList.add('cell-filled');
@@ -246,10 +273,31 @@ gameBoard.appendChild(cell);
       cells[33].classList.add('cell-powered');
       cells[33].appendChild(jerryImage);
 
-      cells[17].classList.add('cell-obstacle');
-      cells[17].appendChild(spikeImage);
+      cells[wormPosition].appendChild(wormImage);
+  }
+
+  function setBoard3(){
+      clearBoard();
+      wormPosition = 39;
+
+      const barriers = [5, 7, 15, 19, 20, 24, 25, 26, 30, 31, 34, 35, 36];
+      const obstaclePositions = [28, 17, 10];
+
+      for(let j = 0; j < barriers.length; j++){
+        cells[barriers[j]].classList.add('cell-filled');
+      }
+
+      for(let j = 0; j < obstaclePositions.length; j++){
+        cells[obstaclePositions[j]].classList.add('cell-obstacle');
+        cells[obstaclePositions[j]].appendChild(spikeImage.cloneNode());
+      }
+
+      cells[4].classList.add('cell-goal');
+
+      cells[22].classList.add('cell-powered');
+      cells[22].appendChild(jerryImage);
 
       cells[wormPosition].appendChild(wormImage);
   }
 
-  setBoard1();
+  loadSelectedBoard();

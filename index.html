@@ -7,15 +7,21 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Surfacer Game Prototype</h1>
+    <h1>Surfacer Game</h1>
     <div id="game-status">
       <p>Time: <span id="timer">30</span></p>
       <p>Score: <span id="score">0</span></p>
     </div>
 
-    <i id="switchButton" aria-label="Switch">&#8644;</i>
+    <label for="switchLevel">Select level:</label>
+    <select id="switchLevel" aria-label="Select level">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+    </select>
     <i id="resetButton" aria-label="Reset">Reset</i>
 
+    <p id="timerAlert" class="timer-alert" role="status" aria-live="polite" hidden>Only 3 seconds left!</p>
     <div id="game-board"></div>
 
     <div id="winMessage" class="win-message" role="status" aria-live="polite" hidden>
