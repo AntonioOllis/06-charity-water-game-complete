@@ -8,7 +8,21 @@ let won = false;
 
 const score = document.getElementById('score');
 const winMessage = document.getElementById('winMessage');
+const winMessageHeading = winMessage.querySelector('h2');
+const winMessageText = winMessage.querySelector('p');
 const confetti = document.getElementById('confetti');
+
+const winSound = new Audio('sound/Win.wav');
+const powerUpSound = new Audio('sound/PowerUp.wav');
+const obstacleSound = new Audio('sound/Hurt.wav');
+const loseSound = new Audio('sound/Lose.wav');
+
+function playSound(sound){
+  sound.currentTime = 0;
+  sound.play().catch(function(error){
+    console.log('The sound could not play:', error);
+  });
+}
 
 const timer = document.getElementById('timer');
 let timeLeft = 30;
@@ -28,7 +42,10 @@ function startTimer(){
     // TODO: Show the updated time in the timer element.
     timer.textContent = timeLeft;
     // TODO: When timeLeft reaches 0, stop timerInterval.
-    if(timeLeft == 0 || won == true){
+    if(timeLeft == 0 && won == true){
+      clearInterval(timerInterval);
+    } else if (timeLeft == 0) {
+      lose();
       clearInterval(timerInterval);
     }
   }, 1000);
@@ -41,8 +58,8 @@ wormImage.src = 'img/worm.png';
 wormImage.alt = 'worm';
 
 const spikeImage = document.createElement('img');
-spikeImage.src = 'img/spikes.png';
-spikeImage.alt = 'spikes';
+spikeImage.src = 'img/spike.png';
+spikeImage.alt = 'spike';
 
 const jerryImage = document.createElement('img');
 jerryImage.src = 'img/water-can-transparent.png';
@@ -72,13 +89,18 @@ resetButton.addEventListener('click', function() {
   board = 1;
   score.textContent = 0;
   winMessage.hidden = true;
+  winMessage.classList.remove('win-message--loss');
   confetti.replaceChildren();
   setBoard1();
   resetTimer();
 })
 
 function win(){
+  playSound(winSound);
   winMessage.hidden = false;
+  winMessage.classList.remove('win-message--loss');
+  winMessageHeading.textContent = 'You win!';
+  winMessageText.textContent = 'You reached the goal. Great job!';
   confetti.replaceChildren();
 
   const confettiColors = ['#FFC907', '#2E9DF7', '#4FCB53', '#FF902A', '#F16061'];
@@ -91,6 +113,15 @@ function win(){
     piece.style.animationDelay = `${Math.random() * 1.5}s`;
     confetti.appendChild(piece);
   }
+}
+
+function lose(){
+  playSound(loseSound);
+  winMessage.hidden = false;
+  winMessage.classList.add('win-message--loss');
+  winMessageHeading.textContent = 'You lost!';
+  winMessageText.textContent = "You didn't reach the goal in time!";
+  confetti.replaceChildren();
 }
 
 // Create one cell and give it the styles for a filled box.
@@ -134,10 +165,12 @@ gameBoard.appendChild(cell);
     if(nextCell.classList.contains('cell-filled')){
       return;
     }else if(nextCell.classList.contains('cell-obstacle')){
+       playSound(obstacleSound);
        timeLeft -= 10;
       nextCell.removeChild(spikeImage);
       nextCell.classList.remove('cell-obstacle');
     }else if(nextCell.classList.contains('cell-powered')){
+      playSound(powerUpSound);
       timeLeft += 10;
       nextCell.removeChild(jerryImage);
       nextCell.classList.remove('cell-powered');

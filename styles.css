@@ -23,8 +23,12 @@ body {
     padding: 24px 16px;
     background-color: #fff7d6;
     color: #243746;
-    font-family: Arial, sans-serif;
+    font-family: 'Proxima Nova', Arial, sans-serif;
     text-align: center;
+}
+
+button {
+    font-family: inherit;
 }
 
 h1 {
@@ -82,6 +86,12 @@ h1 {
     box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
 }
 
+.win-message--loss {
+    border-color: #F5402C;
+    background-color: #fff0ee;
+    color: #7a1d16;
+}
+
 .win-message h2,
 .win-message p {
     margin: 0;
@@ -123,13 +133,16 @@ h1 {
     position: relative;
     min-width: 0;
     min-height: 0;
-    background-color: #f8fcff;
+    background-color: #ffe89460;
     border: 2px solid black;
     border-radius: 4px;
 }
 
 .cell-filled{
-  background-color: black;
+    background-color: #FFC907;
+        background-image: url('img/dirt.png');
+        background-position: center;
+        background-size: cover;
     border: 2px solid black;
     border-radius: 4px;
 }
