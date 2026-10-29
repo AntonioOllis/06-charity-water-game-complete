@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charity Water Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Surfacer Game Prototype</h1>
+    <div id="game-status">
+      <p>Time: <span id="timer">30</span></p>
+      <p>Score: <span id="score">0</span></p>
+    </div>
+
+    <i id="switchButton" aria-label="Switch">&#8644;</i>
+    <i id="resetButton" aria-label="Reset">Reset</i>
+
+    <div id="game-board"></div>
+
+    <div id="winMessage" class="win-message" role="status" aria-live="polite" hidden>
+        <h2>You win!</h2>
+        <p>You reached the goal. Great job!</p>
+    </div>
+    <div id="confetti" class="confetti" aria-hidden="true"></div>
+
+    <div id="mobile-controls" aria-label="Worm movement controls">
+        <button type="button" data-direction="up" aria-label="Move up">&#8593;</button>
+        <button type="button" data-direction="left" aria-label="Move left">&#8592;</button>
+        <button type="button" data-direction="down" aria-label="Move down">&#8595;</button>
+        <button type="button" data-direction="right" aria-label="Move right">&#8594;</button>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+<footer>
+    <a href="https://www.charitywater.org/our-work">
+        <img id="logo" src="img/cw_logo_horizontal.png" alt="charity: water">
+    </a>
+</footer>
+</html>

@@ -1,0 +1,238 @@
+/* Charity: water Brand Colors
+
+Primary Colors:
+- Yellow:     #FFC907
+- Blue:       #2E9DF7
+
+Secondary Colors:
+- Light Blue: #8BD1CB
+- Green:      #4FCB53
+- Orange:     #FF902A
+- Red:        #F5402C
+- Dark Green: #159A48
+- Pink:       #F16061
+
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 24px 16px;
+    background-color: #fff7d6;
+    color: #243746;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+}
+
+#switchButton {
+    display: inline-block;
+    font-size: 32px;
+    margin-right: 20px;
+}
+
+#resetButton {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+#game-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    color: black;
+    font-weight: bold;
+}
+
+#game-status p {
+    margin: 0;
+}
+
+#game-status p + p {
+    padding-left: 15px;
+    border-left: 2px solid black;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-rows: repeat(8, minmax(0, 1fr));
+    width: min(100%, 700px);
+    aspect-ratio: 5 / 3;
+    margin: 25px auto;
+    border: 4px solid black;
+    border-radius: 10px;
+    background-color: black;
+}
+
+.win-message {
+    width: min(90%, 360px);
+    margin: 16px auto;
+    padding: 16px;
+    border: 3px solid #159A48;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+}
+
+.win-message h2,
+.win-message p {
+    margin: 0;
+}
+
+.win-message p {
+    margin-top: 6px;
+}
+
+.confetti {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.confetti-piece {
+    position: absolute;
+    top: -12px;
+    width: 10px;
+    height: 16px;
+    animation: confetti-fall 3s linear forwards;
+}
+
+@keyframes confetti-fall {
+    to {
+        transform: translateY(105vh) rotate(720deg);
+    }
+}
+
+#mobile-controls {
+    display: none;
+}
+
+.cell {
+    display: grid;
+    place-items: center;
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    background-color: #f8fcff;
+    border: 2px solid black;
+    border-radius: 4px;
+}
+
+.cell-filled{
+  background-color: black;
+    border: 2px solid black;
+    border-radius: 4px;
+}
+
+.cell-powered{
+  background-color: #baedff;
+    border: 2px solid black;
+    border-radius: 4px;
+}
+
+.cell-obstacle{
+  background-color: #ffd9d9;
+    border: 2px solid black;
+    border-radius: 4px;
+}
+
+.cell-goal{
+  background-color: #baffbc;
+    border: 2px solid black;
+      border-radius: 4px;
+}
+
+.cell img{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+}
+
+footer {
+    margin-top: 16px;
+}
+
+#logo {
+    display: block;
+    width: min(220px, 70vw);
+    height: auto;
+    margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 16px 12px;
+    }
+
+    h1 {
+        margin: 0 0 12px;
+    }
+
+    #game-board {
+        width: 100%;
+        height: min(58svh, calc(100svh - 350px));
+        aspect-ratio: auto;
+        margin: 16px auto;
+        border-width: 3px;
+    }
+
+    .cell {
+        border-width: 1px;
+    }
+
+    footer {
+        margin-top: 8px;
+    }
+
+    #mobile-controls {
+        display: grid;
+        grid-template-columns: repeat(3, 56px);
+        grid-template-rows: repeat(2, 56px);
+        justify-content: center;
+        gap: 8px;
+        margin: 12px auto;
+    }
+
+    #mobile-controls button {
+        border: 2px solid #243746;
+        border-radius: 10px;
+        background-color: #ffc907;
+        color: #243746;
+        font-size: 28px;
+        touch-action: manipulation;
+    }
+
+    #mobile-controls button[data-direction="up"] {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    #mobile-controls button[data-direction="left"] {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    #mobile-controls button[data-direction="down"] {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    #mobile-controls button[data-direction="right"] {
+        grid-column: 3;
+        grid-row: 2;
+    }
+}
